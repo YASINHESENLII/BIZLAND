@@ -21,43 +21,42 @@ namespace BIZLAND.Controllers
             return View();
         }
         [HttpPost]
-
         public async Task<IActionResult> Register(RegisterVM user)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
-            AppUser exis = new AppUser
+            AppUser userr = new AppUser
             {
-                Name = user.Name,
-                Email = user.Email,
-                Surname = user.Surname,
-                UserName=user.Usename
-                
-
+                UserName=user.Usename,
+                Email=user.Email,
+                Name=user.Name,
+                Surname =user.Surname,
             };
-            IdentityResult result = await _usermanager.CreateAsync(exis,user.Password);
-            if (!result.Succeeded)
+
+            IdentityResult error = await _usermanager.CreateAsync(userr,user.Password);
+            if (error.Succeeded)
             {
-                foreach (var item in result.Errors)
+                foreach (var item in error.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, item.Description);
+                    ModelState.AddModelError(string.Empty,item.Description);
                     return View();
-                    
                 }
             }
-
-          await  _signInManager.SignInAsync(exis,false);
+            await _signInManager.SignInAsync(userr, false);
 
             return RedirectToAction("Index","Home");
-     }
+
+
+
+
+        }
 
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Login()
@@ -68,33 +67,27 @@ namespace BIZLAND.Controllers
 
         public async Task<IActionResult>Login(LoginVM login)
         {
-            if (!ModelState.IsValid)
+            AppUser existed = await _usermanager.FindByEmailAsync(login.UsernameOrEmail);
+            if(existed == null)
             {
-                return View();
-            }
-
-            var exs = await _usermanager.FindByEmailAsync(login.UsernameOrEmail);
-            if(exs == null)
-            {
-                exs = await _usermanager.FindByNameAsync(login.UsernameOrEmail);
-                if (exs == null)
+                existed=await _usermanager.FindByNameAsync(login.UsernameOrEmail);
+                if( existed == null)
                 {
-                    ModelState.AddModelError(String.Empty, "Bu adda istifadexi yoxdur");
-
+                    ModelState.AddModelError(string.Empty, "Bele istifadeci movcuddur");
+                    return View();
                 }
             }
-
-          var pas =  await _signInManager.PasswordSignInAsync(exs, login.Password, login.RememberMe, false);
-
-            if (pas == null)
+            var asa = await _signInManager.PasswordSignInAsync(existed, login.Password, login.RememberMe, false);
+            if(asa == null)
             {
 
-                ModelState.AddModelError(string.Empty, "Bu adda username ve email tapilmadi");
+                ModelState.AddModelError(string.Empty, "Bele istifadeci movcuddur");
                 return View();
             }
 
-            return RedirectToAction("Index", "Home");
 
+
+            return RedirectToAction("Index", "Home");
         }
 
 

@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using BIZLAND.Service;
+
+@inject LayoutService service;
+@{
+    Dictionary<string, string> settings = await service.GetSettings();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -65,8 +72,7 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-                <ul>
-                    <li>
+               
                 @if (User.Identity.IsAuthenticated)
                     {
                         <li><a class="nav-link scrollto " asp-action="Register" asp-controller="accaunt">@User.Identity.Name</a></li>
@@ -78,8 +84,8 @@
                           <li><a class="nav-link scrollto " asp-action="Login" asp-controller="accaunt">Login</a></li>
                           <li><a class="nav-link scrollto " asp-action="Register" asp-controller="accaunt">Register</a></li>
                     }
-                    </li>
-                </ul>  
+                    
+                
         
                    
 
@@ -136,11 +142,10 @@
           <div class="col-lg-3 col-md-6 footer-contact">
             <h3>BizLand<span>.</span></h3>
             <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> info@example.com<br>
+                @settings.["Adres"]
+               <br><br>
+              <strong>Phone:</strong>@settings["Phone"]<br>
+              <strong>Email:</strong>@settings["Email"] <br>
             </p>
           </div>
 

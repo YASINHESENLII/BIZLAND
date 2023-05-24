@@ -1,5 +1,6 @@
 using BIZLAND.DAL;
 using BIZLAND.Models;
+using BIZLAND.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -14,19 +15,19 @@ namespace BIZLAND
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
             {
-                options.Password.RequiredUniqueChars = 1;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequiredLength = 8;
-                options.Password.RequireUppercase = true;
+                //options.Password.RequiredUniqueChars = 1;
+                //options.Password.RequireNonAlphanumeric = false;
+                //options.Password.RequireDigit = true;
+                //options.Password.RequireLowercase = true;
+                //options.Password.RequiredLength = 8;
+                //options.Password.RequireUppercase = true;
 
 
-                options.User.RequireUniqueEmail = true;
+                //options.User.RequireUniqueEmail = true;
 
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
+                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                //options.Lockout.MaxFailedAccessAttempts = 5;
+                //options.Lockout.AllowedForNewUsers = true;
 
 
             }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
@@ -38,7 +39,7 @@ namespace BIZLAND
 
             builder.Services.AddDbContext<AppDbContext>(opt=>opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddScoped<LayoutService>();
             var app = builder.Build();
             app.UseAuthentication();
             app.UseAuthorization();

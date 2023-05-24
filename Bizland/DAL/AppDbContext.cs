@@ -13,5 +13,7 @@ namespace BIZLAND.DAL
 
         public DbSet<Team> teams { get; set; }
 
+        public DbSet<Settings> settings { get; set; }
+
     }
 }
